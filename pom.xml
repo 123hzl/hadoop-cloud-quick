@@ -16,27 +16,25 @@
 
 
     <properties>
-        <itextpdf>5.5.13.1</itextpdf>
-        <google.zxing>3.3.3</google.zxing>
-        <httpclient>4.5.9</httpclient>
-        <freemarker>2.2.2.RELEASE</freemarker>
-        <apache.poi>5.0.0</apache.poi>
-        <poi-ooxml>5.0.0</poi-ooxml>
-        <poi-scratchpad>5.0.0</poi-scratchpad>
         <druid>1.1.22</druid>
-        <easyexcel>2.1.6</easyexcel>
-        <ant>1.10.7</ant>
-        <commons-compress>1.19</commons-compress>
-        <activiti>7.1.0.M6</activiti>
-        <hadoop-client>3.2.1</hadoop-client>
-        <hzl.mybatis.plug>0.0.1-SNAPSHOT</hzl.mybatis.plug>
-        <hutool>5.7.4</hutool>
         <mybatis-plus-baomi>3.4.3.4</mybatis-plus-baomi>
         <dynamic-datasource>3.2.1</dynamic-datasource>
+        <security-oauth2>2.2.5.RELEASE</security-oauth2>
+        <lombok>1.18.22</lombok>
     </properties>
 
-
     <dependencies>
+        <!--自定义依赖组件-->
+        <dependency>
+            <groupId>com.hzl.cloud</groupId>
+            <artifactId>common-starter</artifactId>
+            <version>1.0.0-RELEASE</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.hzl.cloud</groupId>-->
+            <!--<artifactId>oauth-starter</artifactId>-->
+            <!--<version>0.0.1-SNAPSHOT</version>-->
+        <!--</dependency>-->
         <!--实现配置的动态变更-->
         <!-- https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-config -->
         <!--<dependency>-->
@@ -52,69 +50,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok}</version>
         </dependency>
 
-        <!--开启springmvc-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
-        <!--pdf操作-->
-        <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-            <version>${itextpdf}</version>
-        </dependency>
-        <!--二维码依赖-->
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>${google.zxing}</version>
-        </dependency>
-        <!-- 模板引擎 Thymeleaf 依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <!--&lt;!&ndash;http工具&ndash;&gt;-->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient}</version>
-        </dependency>
-        <!--模版引擎-->
-        <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-freemarker -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-            <version>${freemarker}</version>
-        </dependency>
-        <!--邮件发送-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-        <!--word,excel解析-->
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>${apache.poi}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml主要用于操作docx -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${poi-ooxml}</version>
-        </dependency>
-        <!--用于操作doc-->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-scratchpad</artifactId>
-            <version>${poi-scratchpad}</version>
-        </dependency>
         <!--druid连接池-->
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
         <dependency>
@@ -122,92 +61,7 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid}</version>
         </dependency>
-        <!--集成自定义多数据源插件-->
-        <!--<dependency>-->
-            <!--<groupId>com.hzl.cloud</groupId>-->
-            <!--<artifactId>mybatis-starter</artifactId>-->
-            <!--<version>${hzl.mybatis.plug}</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-            <version>${dynamic-datasource}</version>
-        </dependency>
-        <!--阿里开源的excel工具-->
-        <!-- https://mvnrepository.com/artifact/com.alibaba/easyexcel -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
-            <version>${easyexcel}</version>
-        </dependency>
-        <!--文件压缩组件-->
-        <!-- https://mvnrepository.com/artifact/org.apache.ant/ant -->
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>${ant}</version>
-        </dependency>
-        <!--文件压缩解压工具包-->
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-            <version>${commons-compress}</version>
-        </dependency>
-        <!--集成elasticsearch,进行文件索引-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-        </dependency>
 
-        <!--集成工作流-->
-        <!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring -->
-        <!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter -->
-        <!--<dependency>-->
-            <!--<groupId>org.activiti</groupId>-->
-            <!--<artifactId>activiti-spring-boot-starter</artifactId>-->
-            <!--<version>${activiti}</version>-->
-        <!--</dependency>-->
-        <!--集成Hadoop开始-->
-        <!--hdfs开始-->
-        <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client -->
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-hdfs</artifactId>
-            <version>${hadoop-client}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-core</artifactId>
-            <version>${hadoop-client}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>${hadoop-client}</version>
-        </dependency>
-        <!--</dependency>-->
-
-        <!--hdfs结束-->
-        <!--mapreduce开始-->
-        <!--mapreduce结束-->
-        <!--集成hadoop结束-->
-        <!--支付模块集成-->
-        <!--微信支付-->
-
-        <!--微信支付结束-->
-        <!--支付模块集成结束-->
-
-        <!--消息中间件-->
         <!--不添加该jar，会报错el表达式错误-->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -216,81 +70,24 @@
         </dependency>
 
 
-        <!--消息中间件结束-->
-        <!--dubbo,rpc调用-->
-
-        <!-- Spring Boot dependencies -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-actuator</artifactId>-->
-        <!--</dependency>-->
-
-        <!-- Dubbo Spring Cloud Starter -->
-        <!--<dependency>-->
-            <!--<groupId>com.alibaba.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-starter-dubbo</artifactId>-->
-        <!--</dependency>-->
-        <!--dubbo结束-->
-
-
-        <!--websocket-->
+        <!--mybatis插件-->
+        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
-        <!--websocket结束-->
-
-        <!--集成工具包https://www.hutool.cn/docs/#/-->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool}</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus-baomi}</version>
         </dependency>
 
-        <!--集成定时器-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.baomidou/dynamic-datasource-spring-boot-starter &ndash;&gt;-->
+        <!--https://mvnrepository.com/artifact/com.baomidou/dynamic-datasource-spring-boot-starter-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-            <version>3.2.1</version>
+            <version>${dynamic-datasource}</version>
         </dependency>
 
+        <!--mybatis插件结束-->
 
-        <!--添加springsecurity-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-security</artifactId>-->
-        <!--</dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.security.oauth.boot/spring-security-oauth2-autoconfigure -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.security.oauth.boot</groupId>-->
-            <!--<artifactId>spring-security-oauth2-autoconfigure</artifactId>-->
-        <!--</dependency>-->
-
-        <!--添加springsecurity结束-->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.commons</groupId>-->
-            <!--<artifactId>commons-lang3</artifactId>-->
-            <!--<version>3.12.0</version>-->
-        <!--</dependency>-->
-        <!--拼音库-->
-        <dependency>
-            <groupId>io.github.biezhi</groupId>
-            <artifactId>TinyPinyin</artifactId>
-            <version>2.0.3.RELEASE</version>
-        </dependency>
-        <!--拼音库结束-->
-        <!--添加springsecurity结束-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <!--<version>2.5.0</version>-->
-        </dependency>
         <!--热部署-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -301,30 +98,20 @@
         </dependency>
         <!--热部署结束-->
 
-        <!--限流组件-->
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>31.0.1-jre</version>
-        </dependency>
 
-        <!--限流组件结束-->
-        <!--mybatis插件-->
-        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus-baomi}</version>
-        </dependency>
-        <!--mybatis插件结束-->
-
-        <!--添加rabbitmq-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!--添加rabbitmq结束-->
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <version>${security-oauth2}</version>
+        </dependency>
+
+
 
     </dependencies>
 

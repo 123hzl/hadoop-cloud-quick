@@ -1,9 +1,6 @@
 package com.hzl.hadoop.config.redis;
 
 import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -13,10 +10,7 @@ import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.hzl.hadoop.constant.CharsetConstant;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
@@ -27,9 +21,6 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -108,23 +99,8 @@ public class RedisConfig extends CachingConfigurerSupport {
 	public ObjectMapper objectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-		//过期objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 		objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
 				ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-		//日期格式化
-//		JavaTimeModule javaTimeModule = new JavaTimeModule();
-//		javaTimeModule.addSerializer(Date.class, new DateSerializer());
-//		javaTimeModule.addDeserializer(Date.class, new DateDeserializers.DateDeserializer());
-//		javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DataConstant.DATE)));
-//		javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DataConstant.DATE)));
-//		javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DataConstant.DATETIME)));
-//		javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DataConstant.DATETIME)));
-		//日期格式化结束
-//
-		// TODO: 2020/1/20  
-//		SimpleModule simpleModule = new SimpleModule();对数据进行格式化，例如去除前后空格，后期做
-
-
 		objectMapper.registerModule(new JavaTimeModule())
 				.registerModule(new ParameterNamesModule())
 				.registerModule(new Jdk8Module());
@@ -144,7 +120,6 @@ public class RedisConfig extends CachingConfigurerSupport {
 	 */
 	@Bean(value = "redisTemplate")
 	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-		log.info("自定义redis工厂{}", factory.getClass().getName());
 
 		//日期格式化结束
 		Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -162,106 +137,6 @@ public class RedisConfig extends CachingConfigurerSupport {
 		return redisTemplate;
 	}
 
-
-	/**
-	 * <p>
-	 * 多数据源
-	 * </p>
-	 * N
-	 *
-	 * @author hzl 2020/01/17 3:10 PM
-	 */
-	@Bean(value = "redisTemplate1")
-	public RedisTemplate<String, Object> redisTemplate2(RedisConnectProperties redisConnectProperties) {
-		log.info("自定义redis配置类{}", redisConnectProperties.toString());
-
-		/* ========= 基本配置 ========= */
-		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-		configuration.setHostName(redisConnectProperties.getHost());
-		configuration.setPort(redisConnectProperties.getPort());
-		configuration.setDatabase(redisConnectProperties.getDatabase());
-		/* ========= 连接池通用配置 ========= */
-		GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig();
-		genericObjectPoolConfig.setMaxIdle(redisConnectProperties.getLettuce().getPool().getMaxIdle());
-		genericObjectPoolConfig.setMinIdle(redisConnectProperties.getLettuce().getPool().getMinIdle());
-		genericObjectPoolConfig.setMaxTotal(redisConnectProperties.getLettuce().getPool().getMaxActive());
-		/* ========= lettuce pool ========= */
-		LettucePoolingClientConfiguration.LettucePoolingClientConfigurationBuilder builder = LettucePoolingClientConfiguration.builder();
-		builder.poolConfig(genericObjectPoolConfig);
-		builder.commandTimeout(redisConnectProperties.getTimeout());
-
-		LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(configuration, builder.build());
-		connectionFactory.afterPropertiesSet();
-
-		//上面是工厂定义
-		log.info("自定义redis工厂{}", connectionFactory.getClass().getName());
-		//日期格式化结束
-		Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-		jackson2JsonRedisSerializer.setObjectMapper(objectMapper());
-
-		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
-		redisTemplate.setConnectionFactory(connectionFactory);
-		//设置键的序列号为string
-		redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		//设置值的序列化为json
-		redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new StringRedisSerializer());
-
-		return redisTemplate;
-	}
-
-	/**
-	 * <p>
-	 * https://github.com/alibaba/fastjson/issues/2802
-	 * https://blog.csdn.net/imtzc/article/details/102569671
-	 * http://www.javashuo.com/article/p-mulwkhbw-ep.html
-	 * 当前引用的版本存在bug，后期修改
-	 * todo 反序列化有问题
-	 * </p>
-	 *
-	 * @author hzl 2020/01/19 5:38 PM
-	 */
-//	@Bean
-//	@ConditionalOnMissingBean
-//	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-//
-//		//2.添加fastJson的配置信息，比如：是否要格式化返回的json数据;
-//		FastJsonConfig fastJsonConfig = new FastJsonConfig();
-//		fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat,
-//				//数值字段如果为null,输出为0,而非null
-//				SerializerFeature.WriteNullNumberAsZero,
-//				//List字段如果为null,输出为[],而非null
-//				SerializerFeature.WriteNullListAsEmpty,
-//				//字符类型字段如果为null,输出为"",而非null
-//				SerializerFeature.WriteNullStringAsEmpty,
-//				//Boolean字段如果为null,输出为falseJ,而非null
-//				SerializerFeature.WriteNullBooleanAsFalse,
-//				//消除对同一对象循环引用的问题，默认为false（如果不配置有可能会进入死循环）
-//				SerializerFeature.DisableCircularReferenceDetect,
-//				//是否输出值为null的字段,默认为false。设置后为null的字段会输出
-//				SerializerFeature.WriteMapNullValue,
-//				//对斜杠’/’进行转义
-//				SerializerFeature.WriteSlashAsSpecial
-//				//将对象转为array输出
-//				//SerializerFeature.BeanToArray
-//		);
-//		fastJsonConfig.setCharset(CharsetConstant.DEFAULT_CHARSET);
-//
-//		FastJsonRedisSerializer fastJsonRedisSerializer = new FastJsonRedisSerializer(Object.class);
-//		fastJsonRedisSerializer.setFastJsonConfig(fastJsonConfig);
-//
-//		RedisTemplate<String, Object> redisTemplate = new RedisTemplate();
-//		redisTemplate.setConnectionFactory(factory);
-//		//设置键的序列号为string
-//		redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-//		redisTemplate.setKeySerializer(new StringRedisSerializer());
-//		//设置值的序列化为json
-//		redisTemplate.setHashValueSerializer(fastJsonRedisSerializer);
-//		redisTemplate.setValueSerializer(fastJsonRedisSerializer);
-//		redisTemplate.afterPropertiesSet();
-//		return redisTemplate;
-//	}
 
 	/**
 	 * springboot的@Cacheable的redis缓存配置类

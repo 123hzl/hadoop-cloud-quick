@@ -1,38 +1,4 @@
-#服务端口号
-server:
-  port: 8888
-
-hadoop:
-  openMulti: true #是否开启多数据源
-
 spring:
-  application:
-    name: hzl-register
-  freemarker:
-      # 禁用模板缓存
-      cache: false
-      # 编码格式
-      charset: UTF-8
-      # freemarker模板后缀 默认是 .ftl
-      suffix: .html
-      # 是否为此技术启用MVC视图分辨率。
-      enabled: true
-      # Content-Type值
-      content-type: text/html
-      # #模板加载路径 按需配置 ,默认路径是 classpath:/templates/
-      template-loader-path: classpath:/templates/
-  #邮件配置信息，后期可保存到数据库
-  mail:
-    host: smtp.163.com
-    username: hzlvip1994@163.com
-    password: MLYFWTNYZGPZUUDW
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
   cache:
     type: none #设置cache的类型可以是redis,none是禁用cache缓存
   redis:
@@ -49,24 +15,6 @@ spring:
         max-wait: -1ms
         #连接池中最大空闲连接
         max-idle: 8
-        #连接池中最新空闲连接
-        min-idle: 0
-    password:
-    timeout: 10000ms
-  redis1:
-    host: tt
-    port: 6379
-    # redis默认情况下有16个分片，这里配置具体使用的分片，默认为0
-    database: 0
-    #在 Spring Boot 2.x 以后底层不再使用 Jedis，而是换成了 Lettuce。
-    lettuce:
-      pool:
-        # 连接池最大连接数(使用负数表示没有限制),默认8
-        max-active: 9
-        #连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-wait: -1ms
-        #连接池中最大空闲连接
-        max-idle: 9
         #连接池中最新空闲连接
         min-idle: 0
     password:
@@ -129,41 +77,11 @@ spring:
           driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
-#消息中间件配置
-  rabbitmq:
-    host: 11
-    port: 5672
-    # 集群地址，用逗号分隔
-    connection-timeout: 60000
-    password: 12333
-    # 使用启用消息确认模式 true
-    username: 3333
-    virtual-host: 123
-    #Correlated 值是发布消息成功到交换器后会触发回调方法
-    publisher-confirm-type: correlated
-    #生产者发送的消息，经 Exchange 交换器路由到某个Queue队列中。如果消息没有到达Queue，则将消息返回给生产者（需要和Mandatory 参数一起用
-    publisher-returns: true
-    #当 mandatory 参数设置为true时，交换器无法根据自身的类型和路由键找到一个符合条件对队列，那么 RabbitMQ 会调用 Basic.Return 命令将消息返回给生产者。
-    #当 mandatory 参数设置为 false 时，出现上述情况，则消息直接被丢弃
-    template:
-      mandatory: true
-    listener:
-      direct:
-        acknowledge-mode: manual
-        prefetch: 6
-        auto-startup: false
-      simple:
-        acknowledge-mode: manual
-        prefetch: 6
-        batch-size: 3
-        auto-startup: false
-      type: direct
-
 
 
 # 包扫描或者在启动类上添加@MapperScan或者在每个mapper接口上添加@Mapper注解
 mybatis-plus:
-  mapperLocations: classpath:mapper/**/*.xml
+  mapperLocations: classpath*:mapper/**/*.xml
   configuration: # 数据库下划线转驼峰配置
     mapUnderscoreToCamelCase: true
     cache-enabled: false #关闭二级缓存
@@ -172,7 +90,7 @@ mybatis-plus:
 #日志springboot默认日志logback，默认等级为info
 logging:
   level:
-    #root: debug 所有目录的日志等级都为debug
+    #root: debug #所有目录的日志等级都为debug
     com.hzl: debug #指定目录下的日志，等级为debug
   config: 'classpath:logback-spring.xml'
 
@@ -181,29 +99,6 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   params: count=countSql
-
-
-#关闭httpbasic认证
-#httpbasic:
-#  isOpen: "true"
-##tk插件配置,作废后测试没问题，暂时不删除，等有问题了方便参考
-#mapper:
-#  identity: mysql
-#  mappers:
-#      - com.hzl.cloud.config.mybatis.BaseMapperUtil
-#  not-empty: false
-
-#dubbo配置
-#dubbo:
-#  scan:
-#    base-packages: com.hzl.hadoop.rpc.service
-#  protocols:
-#    dubbo:
-#      name: dubbo
-#      port: -1
-#  registry:
-#    address: spring-cloud://localhost
-
 
 ---
 
